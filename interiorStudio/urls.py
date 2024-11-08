@@ -5,7 +5,7 @@ from django.views.decorators.cache import never_cache
 from django.views.static import serve
 
 urlpatterns = [
-    path('', include('planit.urls', namespace='')),
+    # path('', include('planit.urls', namespace='')),
     path('admin/', admin.site.urls),
 ]
 if settings.DEBUG:
