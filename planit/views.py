@@ -1,20 +1,26 @@
 from django.shortcuts import render
+from django.contrib.auth.views import LoginView,LogoutView
 from django.views.generic.edit import CreateView, DeleteView
 from .models import Application
 from .forms import ApplicationForm
 from django.urls import reverse_lazy
 from django.contrib import messages
-import os
 
+def index(request):
+    applications = Application.objects.filter(status='completed').order_by('-created_at')[:4]
+    return render(request, 'application/watch_application.html', {'applications': applications})
+
+class BBLoginView(LoginView):
+    template_name = 'user/login.html'
+    def form_valid(self, form):
+        messages.success(self.request, "Вы успешно вошли в систему!")
+        return super().form_valid(form)
 
 def watchAplication(request):
     applications = Application.objects.all().order_by('-created_at')
     return render(request, 'application/watch_application.html',
     {'applications': applications})
 
-def index(request):
-    applications = Application.objects.filter(status='completed').order_by('-created_at')[:4]
-    return render(request, 'application/watch_application.html', {'applications': applications})
 
 class ApplicationView(CreateView):
     model = Application

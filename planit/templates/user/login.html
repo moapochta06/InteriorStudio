@@ -15,7 +15,7 @@
   {% endif %}
 {% endif %}
 
-<form method="post" action="{% url 'catalog:login' %}">
+<form method="post" action="{% url 'planit:login' %}">
 {% csrf_token %}
 {{ form.as_p }}  
 <input type="submit" value="Login" />

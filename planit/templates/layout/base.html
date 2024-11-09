@@ -27,7 +27,7 @@
                     <a class="dropdown-item" href="#">Удалить заявку</a>
                 </div>
             </div>
-
+           
             <!-- Раздел для администратора -->
             {% if user.is_staff %}
                 <div class="nav-item dropdown">
@@ -49,10 +49,10 @@
                     </form>
                 </div>
             </div>
-
+        
         {% else %}
             <a class="p-2 " href="#">Регистрация</a>
-            <a class="p-2 " href="#">Вход</a>
+            <a class="p-2 " href="{% url 'planit:login' %}">Вход</a>
         {% endif %}
     </nav>
 
