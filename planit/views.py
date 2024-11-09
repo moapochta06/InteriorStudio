@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.views import View 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView,LogoutView
 from django.views.generic.edit import CreateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Application
 from .forms import ApplicationForm
 from django.urls import reverse_lazy
@@ -10,11 +13,21 @@ def index(request):
     applications = Application.objects.filter(status='completed').order_by('-created_at')[:4]
     return render(request, 'application/watch_application.html', {'applications': applications})
 
+class BBLogoutConfirmationView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'user/confirm_logout.html')
+
 class BBLoginView(LoginView):
     template_name = 'user/login.html'
+    
     def form_valid(self, form):
         messages.success(self.request, "Вы успешно вошли в систему!")
         return super().form_valid(form)
+
+class BBLogoutView(LoginRequiredMixin, LogoutView):
+    template_name = 'user/logged_out.html'
+
+
 
 def watchAplication(request):
     applications = Application.objects.all().order_by('-created_at')

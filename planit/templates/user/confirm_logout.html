@@ -1,0 +1,14 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="logout-confirmation">
+    <h2>Вы действительно хотите выйти?</h2>
+    <div class="button-group">
+        <form action="{% url 'planit:logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">Да</button>
+        </form>
+        <a href="{% url 'planit:index' %}" class="btn btn-secondary">Остаться</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <p>Вы вышли из системы</p>
+
+  <a href="{% url 'planit:login'%}">Кликните здесь, чтобы войти заново</a>
+{% endblock %}

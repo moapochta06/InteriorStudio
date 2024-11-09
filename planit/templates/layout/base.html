@@ -43,10 +43,7 @@
             <div class="nav-item dropdown">
                 <a class="dropdown-toggle pr-4" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Профиль</a>
                 <div class="dropdown-menu">
-                    <form method="post" action="#">
-                        {% csrf_token %}
-                        <button type="submit" class="dropdown-item">Выйти</button>
-                    </form>
+                    <a href="{% url 'planit:logout_confirm' %}" class="dropdown-item">Выйти</a>
                 </div>
             </div>
         
