@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+body {
+    background-color: #fffdfe;
+    font-family: 'Nunito';
+}
+
+.dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.navbar {
+    background-color: #343434;
+
+}
+
+.navbar a {
+    color: #EFE7E4;
+}
+
+.dropdown-menu>a {
+    color: #343434;
+}
+
+.create-btn {
+    background: #505050;
+    color: #fff;
+}
+
+.create-btn:hover {
+    background-color: #343434;
+    color: #fff;
+}
+
+.create-btn:active {
+    transform: scale(0.97);
+}
+
+/* a,
+a:hover {
+    color: #74203F;
+    text-decoration: underline;
+} */
