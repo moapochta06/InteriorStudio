@@ -48,7 +48,7 @@
             </div>
         
         {% else %}
-            <a class="p-2 " href="#">Регистрация</a>
+            <a class="p-2 " href="{% url 'planit:register' %}">Регистрация</a>
             <a class="p-2 " href="{% url 'planit:login' %}">Вход</a>
         {% endif %}
     </nav>
@@ -60,10 +60,5 @@
         {% endblock %}
     </div>
 
-    <!-- 
-        <footer class="footer mt-3 border-top">
-            <small>&copy; Знакомство с фреймворком Django. 2024</small> 
-        </footer> 
-    -->
 </body>
 </html> 

@@ -1,5 +1,26 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.dispatch import Signal
+from .utilities import send_activation_notification
+user_registrated = Signal('instance')
+
+class AdvUser(AbstractUser): 
+    middle_name = models.CharField(max_length=30, blank=True, verbose_name='Отчество')
+    is_activated = models.BooleanField(default=True, 
+    db_index=True, verbose_name='Прошел активацию?') 
+    personal_data = models.BooleanField(default=True, 
+    verbose_name='Я согласен на обработку персональных данных',null=False, blank=False) 
+class Meta(AbstractUser.Meta): 
+    pass
+
+def user_registrated_dispatcher(sender, **kwargs):
+   send_activation_notification(kwargs['instance'])
+
+
+user_registrated.connect(user_registrated_dispatcher)
+
+
 
 
 class Category(models.Model):
@@ -27,10 +48,3 @@ class Application(models.Model):
     def __str__(self):
         return self.title
     
-class DesignImage(models.Model):
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='designs/')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Design for {self.application.title}"

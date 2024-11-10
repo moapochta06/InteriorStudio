@@ -2,13 +2,14 @@
 
 {% block content %}
   <div class="logout-confirmation">
-    <h2>Вы действительно хотите выйти?</h2>
+    <h2>Вы действительно хотите удалить заявку?</h2>
     <div class="button-group d-flex mt-4">  
-        <form action="{% url 'planit:logout' %}" method="post" class="mr-2"> 
+        <form action="" method="post" class="mr-2"> 
             {% csrf_token %}
             <button class="btn btn-danger">Да</button>
         </form>
-        <a href="{% url 'planit:index' %}" class="btn btn-secondary">Остаться</a>
+        <a href="{% url 'planit:watch_application' %}" class="btn btn-secondary">Нет</a>
+        
     </div>
   </div>
 {% endblock %}

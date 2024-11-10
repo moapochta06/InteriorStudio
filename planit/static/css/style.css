@@ -36,9 +36,3 @@ body {
 .create-btn:active {
     transform: scale(0.97);
 }
-
-/* a,
-a:hover {
-    color: #74203F;
-    text-decoration: underline;
-} */

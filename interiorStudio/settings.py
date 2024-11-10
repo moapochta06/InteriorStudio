@@ -120,3 +120,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TIME_ZONE = 'Asia/Tomsk'  
 
 USE_TZ = True
+
+
+
+AUTH_USER_MODEL = 'planit.AdvUser'
+
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+SERVER_EMAIL = 'v.erikoinen@yandex.ru'
+DEFAULT_FROM_EMAIL = 'v.erikoinen@yandex.ru'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_USER = 'v.erikoinen@yandex.ru'
+EMAIL_HOST_PASSWORD = 'jeboflyciimopzwm'
+EMAIL_PORT = 465
