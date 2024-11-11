@@ -3,7 +3,11 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="mb-4">Список заявок</h2>
-
+    {% if is_index_page %}
+    <div class="alert alert-info">
+        <strong>Количество заявок в статусе "Принято в работу":</strong> {{ in_progress_count }}
+    </div>
+    {% endif %}
     <!-- Filter Options -->
     {% if not is_index_page %}
     <div class="mb-3">
@@ -37,12 +41,17 @@
                             {% else %}
                                 <div>Нет изображения</div>
                             {% endif %}
+                            
                             {% if user.is_authenticated %}
+                                <!-- Dropdown for actions -->
                                 <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
                                     <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: inline-block; transform: rotate(90deg); border: none; outline: none;">
                                         ...
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a  class="dropdown-item" href="{% url 'planit:update_application' application.id %}">Сменить статус</a>
+
+                                        <!-- Delete Option -->
                                         <a class="dropdown-item" href="{% url 'planit:delete_application' application.id %}">Удалить</a>
                                     </div>
                                 </div>

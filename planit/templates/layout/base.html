@@ -24,7 +24,6 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{% url 'planit:create_application' %}">Создать заявку</a>
                     <a class="dropdown-item" href="{% url 'planit:watch_application' %}">Смотреть заявки</a>
-                    <a class="dropdown-item" href="#">Удалить заявку</a>
                 </div>
             </div>
            
@@ -33,8 +32,7 @@
                 <div class="nav-item dropdown">
                     <a class="dropdown-toggle pr-4" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Администрирование</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Сменить статус заявки</a>
-                        <a class="dropdown-item" href="#">Управление категориями</a>
+                        <a class="dropdown-item" href="{% url 'planit:category_list' %}">Управление категориями</a>
                     </div>
                 </div>
             {% endif %}

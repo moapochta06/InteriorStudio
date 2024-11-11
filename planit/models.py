@@ -44,7 +44,7 @@ class Application(models.Model):
     image = models.ImageField(upload_to='applications/', null=True, blank=True, verbose_name='Изображение')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new', verbose_name='Статус')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-
+    comment = models.TextField(null=True, blank=True, verbose_name='Комментарий')
     def __str__(self):
         return self.title
     

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index,ApplicationView,WatchAplication,BBLoginView, BBLogoutView,BBLogoutConfirmationView,ApplicationDelete,RegisterUserView,RegisterDoneView,user_activate
+from .views import index,ApplicationView,WachApplication,BBLoginView, BBLogoutView,BBLogoutConfirmationView,ApplicationDelete,RegisterUserView,RegisterDoneView,user_activate,UpdateApplicationStatusView,CategoryListView,CategoryCreateView,CategoryDeleteView
 app_name = 'planit'
 
 urlpatterns = [
@@ -12,7 +12,10 @@ urlpatterns = [
     path('logout/confirm/', BBLogoutConfirmationView.as_view(), name='logout_confirm'),
     path('logout/', BBLogoutView.as_view(), name='logout'),
     path('create_application/', ApplicationView.as_view(), name='create_application'),
-    path('watch_application/', WatchAplication.as_view() , name='watch_application'),
+    path('watch_application/', WachApplication.as_view() , name='watch_application'),
+    path('application/<int:pk>/update/', UpdateApplicationStatusView.as_view(), name='update_application'),
     path('application/<int:pk>/delete/', ApplicationDelete.as_view() , name='delete_application'),
-
+    path('categories/', CategoryListView.as_view(), name='category_list'),
+    path('category/add/', CategoryCreateView.as_view(), name='add_category'),
+    path('category/<int:pk>/delete/', CategoryDeleteView.as_view(), name='delete_category'),
 ]

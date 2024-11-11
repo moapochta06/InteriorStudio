@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('planit.urls', namespace='')),
-    path('admin/', admin.site.urls),
+    path('superadmin/', admin.site.urls),
 ]
 if settings.DEBUG:
     urlpatterns.append(path('static/<path:path>', never_cache(serve)))

@@ -4,11 +4,17 @@ from django.core.exceptions import ValidationError
 from .models import AdvUser
 from django.contrib.auth import password_validation
 from .models import user_registrated
+from django import forms
+from .models import AdvUser
+from django.core.exceptions import ValidationError
+from django.contrib.auth import password_validation
+from .models import user_registrated
+
 
 class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ['title', 'description', 'category', 'image']
+        fields = ['title', 'description', 'category', 'image'] 
 
     def clean_title(self):
         title = self.cleaned_data.get('title')
@@ -24,28 +30,20 @@ class ApplicationForm(forms.ModelForm):
 
     def clean_image(self):
         image = self.cleaned_data.get('image')
-        if image:
-            if image.size > 2 * 1024 * 1024:  # 2MB limit
-                raise forms.ValidationError("Размер изображения не должен превышать 2 МБ.")
-            return image
-        return None 
+        if image and image.size > 2 * 1024 * 1024:  # 2MB limit
+            raise forms.ValidationError("Размер изображения не должен превышать 2 МБ.")
+        return image
 
     def clean_category(self):
         category = self.cleaned_data.get('category')
         if not category:
             raise forms.ValidationError("Выберите категорию.")
-        
         return category
-    
 
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data
 
-
-
-from django import forms
-from .models import AdvUser
-from django.core.exceptions import ValidationError
-from django.contrib.auth import password_validation
-from .models import user_registrated
 
 class RegisterUserForm(forms.ModelForm):
     username = forms.CharField(
@@ -105,3 +103,26 @@ class RegisterUserForm(forms.ModelForm):
     class Meta:
         model = AdvUser
         fields = ('username','last_name', 'middle_name', 'email', 'password1', 'password2','personal_data')
+
+
+class UpdateApplicationForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ['status', 'image', 'comment']  
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get('status')
+        image = cleaned_data.get('image')
+        comment = cleaned_data.get('comment')
+
+        if self.instance.status == 'new':
+            if status == 'completed' and not image:
+                raise forms.ValidationError("При смене статуса на 'Выполнено' необходимо прикрепить изображение.")
+            if status == 'in_progress' and not comment:
+                raise forms.ValidationError("При смене статуса на 'Принято в работу' необходимо указать комментарий.")
+
+        if self.instance.status in ['completed']:
+            raise forms.ValidationError("Смена статуса невозможна с текущего состояния.")
+
+        return cleaned_data

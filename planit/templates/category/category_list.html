@@ -1,0 +1,30 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Управление категориями заявок</h2>
+
+    <!-- Add Category Form -->
+    <form method="post" action="{% url 'planit:add_category' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" name="name" class="form-control" placeholder="Название категории" required>
+            <button class="btn btn-primary" type="submit">Добавить категорию</button>
+        </div>
+    </form>
+
+    <!-- List of Categories -->
+    {% if categories %}
+        <ul class="list-group">
+            {% for category in categories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ category.name }}
+                    <a href="{% url 'planit:delete_category' category.id %}">Удалить</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет доступных категорий.</p>
+    {% endif %}
+</div>
+{% endblock %}

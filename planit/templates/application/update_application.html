@@ -1,0 +1,15 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Изменить статус заявки</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn create-btn">Сохранить изменения</button>
+    </form>
+</div>
+{% endblock %}
