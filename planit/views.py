@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View 
+from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView,LogoutView
@@ -11,7 +12,7 @@ from .forms import ApplicationForm,RegisterUserForm,UpdateApplicationForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.signing import BadSignature
-
+from .models import ApplicationChangeHistory
 from .utilities import signer
 
 def index(request):
@@ -110,16 +111,29 @@ class UpdateApplicationStatusView(LoginRequiredMixin, UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.instance.user = self.object.user 
+        new_status = form.cleaned_data['status'] 
+        form.instance.user = self.object.user  
+        response = super().form_valid(form)  
+        comment = form.cleaned_data.get('comment')
+        ApplicationChangeHistory.objects.create(
+            application=self.object, 
+            new_status=new_status, 
+            changed_by=self.request.user,
+            comment=comment if new_status == 'in_progress' else None 
+        )
         
         messages.success(self.request, 'Статус заявки успешно обновлён!')
-        return super().form_valid(form)
+        return response
 
-    def get_queryset(self):
-        if self.request.user.is_staff:
-            return Application.objects.all()
-        return Application.objects.filter(user=self.request.user)
+class ApplicationDetailView(DetailView):
+    model = Application
+    template_name = 'application/application_detail.html'  
+    context_object_name = 'application' 
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['change_history'] = self.object.change_history.all()  
+        return context
 
 class ApplicationDelete(LoginRequiredMixin, DeleteView):
     model = Application

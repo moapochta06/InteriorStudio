@@ -1,0 +1,17 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<h3>История изменений</h3>
+<ul>
+    {% for change in application.change_history.all %}
+        <li>{{ change.changed_at|date:"d.m.Y H:i" }}: → {{ change.new_status }} (Изменил: {{ change.changed_by.username }})</li>
+        {% if change.new_status == 'in_progress' and change.comment %}
+            <ul>
+                <li><strong>Комментарий:</strong> {{ change.comment }}</li>
+            </ul>
+        {% endif %}
+    {% empty %}
+        <li>Нет истории изменений.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -48,3 +48,12 @@ class Application(models.Model):
     def __str__(self):
         return self.title
     
+class ApplicationChangeHistory(models.Model):
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, related_name='change_history')
+    new_status = models.CharField(max_length=20)
+    changed_at = models.DateTimeField(auto_now_add=True)
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    comment = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.application.title} changed from {self.previous_status} to {self.new_status} on {self.changed_at}"

@@ -125,6 +125,10 @@ class UpdateApplicationForm(forms.ModelForm):
             if status == 'in_progress' and not comment:
                 raise forms.ValidationError("При смене статуса на 'Принято в работу' необходимо указать комментарий.")
 
+        if self.instance.status == 'in_progress':
+            if status == 'completed' and not image:
+                raise forms.ValidationError("При смене статуса на 'Выполнено' необходимо прикрепить изображение.")
+
         if self.instance.status in ['completed']:
             raise forms.ValidationError("Смена статуса невозможна с текущего состояния.")
 

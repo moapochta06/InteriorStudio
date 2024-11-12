@@ -53,6 +53,7 @@
 
                                         <!-- Delete Option -->
                                         <a class="dropdown-item" href="{% url 'planit:delete_application' application.id %}">Удалить</a>
+                                        <a class="dropdown-item" href="{% url 'planit:application_detail' application.id %}">Посмотреть историю</a>
                                     </div>
                                 </div>
                             {% endif %}
