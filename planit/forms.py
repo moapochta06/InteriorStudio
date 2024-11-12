@@ -1,4 +1,5 @@
 from django import forms
+from captcha.fields import CaptchaField
 from .models import Application
 from django.core.exceptions import ValidationError
 from .models import AdvUser
@@ -76,6 +77,8 @@ class RegisterUserForm(forms.ModelForm):
         error_messages={'required': 'Необходимо согласие на обработку данных.'}
     )
 
+    captcha = CaptchaField(label='Введите код с картинки')
+
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
         if password1:
@@ -102,7 +105,7 @@ class RegisterUserForm(forms.ModelForm):
 
     class Meta:
         model = AdvUser
-        fields = ('username','last_name', 'middle_name', 'email', 'password1', 'password2','personal_data')
+        fields = ('username','last_name', 'middle_name', 'email', 'password1', 'password2','personal_data','captcha')
 
 
 class UpdateApplicationForm(forms.ModelForm):

@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('planit.urls', namespace='')),
+    path('captcha/', include('captcha.urls')),
     path('superadmin/', admin.site.urls),
 ]
 if settings.DEBUG:

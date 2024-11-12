@@ -22,7 +22,7 @@ def index(request):
         'is_index_page': True,
         'in_progress_count': in_progress_count
     })
-    
+
 class RegisterUserView(CreateView):
    model = AdvUser
    template_name = 'user/register_user.html'
@@ -156,7 +156,7 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         category = self.get_object()
         applications_count = Application.objects.filter(category=category).count()
-        Application.objects.filter(category=category).delete()  # This will delete all related applications
+        Application.objects.filter(category=category).delete()  
         
         messages.success(request, f'Категория "{category.name}" и все связанные заявки (всего {applications_count}) успешно удалены.')
         return super().delete(request, *args, **kwargs)
