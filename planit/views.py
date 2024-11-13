@@ -85,20 +85,20 @@ class WatchApplication(LoginRequiredMixin, ListView):
     context_object_name = 'applications' 
 
     def get_queryset(self):
-        
         queryset = super().get_queryset()
-        
-        status_filter = self.request.GET.get('status')
-        if status_filter:
-            queryset = queryset.filter(status=status_filter)
-        
-        search_query = self.request.GET.get('search')
-        if search_query:
-            queryset = queryset.filter(
-                title__icontains=search_query
-            )
-        return queryset.order_by('-created_at')
-    
+
+        # Проверяем, является ли пользователь суперпользователем
+        if self.request.user.is_superuser:
+            return queryset  # Если да, возвращаем все заявки
+
+        # Проверяем, состоит ли пользователь в группе "administrators"
+        if self.request.user.groups.filter(name='administrators').exists():
+            # только заявки, созданные суперпользователем
+            return queryset.filter(user__is_superuser=True)
+
+        # Если пользователь не суперпользователь и не администратор, только его заявки
+        return queryset.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['statuses'] = Application.STATUS_CHOICES
@@ -113,7 +113,8 @@ class UpdateApplicationStatusView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('planit:watch_application')
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
+        # является ли суперпользователем или администратором
+        if not (request.user.is_superuser or request.user.groups.filter(name='administrators').exists()):
             messages.error(request, "У вас нет прав для изменения статуса заявки.")
             return redirect('planit:watch_application')  
         return super().dispatch(request, *args, **kwargs)
@@ -133,6 +134,7 @@ class UpdateApplicationStatusView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, 'Статус заявки успешно обновлён!')
         return response
 
+
 class ApplicationDetailView(DetailView):
     model = Application
     template_name = 'application/application_detail.html'  
@@ -149,9 +151,15 @@ class ApplicationDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('planit:watch_application') 
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='administrators').exists():
             return Application.objects.all()
         return Application.objects.filter(user=self.request.user)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.groups.filter(name='administrators').exists()):
+            messages.error(request, "У вас нет прав для удаления заявки.")
+            return redirect('planit:watch_application')
+        return super().dispatch(request, *args, **kwargs)
 
 class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
@@ -182,3 +190,5 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         
         messages.success(request, f'Категория "{category.name}" и все связанные заявки (всего {applications_count}) успешно удалены.')
         return super().delete(request, *args, **kwargs)
+
+

@@ -45,6 +45,7 @@ class Application(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new', verbose_name='Статус')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     comment = models.TextField(null=True, blank=True, verbose_name='Комментарий')
+    assigned_admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_applications', verbose_name='Назначенный администратор')
     def __str__(self):
         return self.title
     
@@ -57,3 +58,5 @@ class ApplicationChangeHistory(models.Model):
 
     def __str__(self):
         return f"{self.application.title} changed from {self.previous_status} to {self.new_status} on {self.changed_at}"
+
+
