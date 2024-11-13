@@ -13,6 +13,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.signing import BadSignature
 from .models import ApplicationChangeHistory
+from django.db.models import Q  
 from .utilities import signer
 
 def index(request):
@@ -77,25 +78,32 @@ class ApplicationView(CreateView):
         messages.success(self.request, 'Заявка успешно создана!')
         return super().form_valid(form)
     
-class WachApplication(LoginRequiredMixin, ListView):
+
+class WatchApplication(LoginRequiredMixin, ListView):
     model = Application
     template_name = 'application/watch_application.html'  
     context_object_name = 'applications' 
 
     def get_queryset(self):
-            if self.request.user.is_staff:
-                queryset = Application.objects.all()  
-            else:
-                queryset = Application.objects.filter(user=self.request.user) 
-            status_filter = self.request.GET.get('status')
-            if status_filter:
-                queryset = queryset.filter(status=status_filter)
-            return queryset.order_by('-created_at')
+        
+        queryset = super().get_queryset()
+        
+        status_filter = self.request.GET.get('status')
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                title__icontains=search_query
+            )
+        return queryset.order_by('-created_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['statuses'] = Application.STATUS_CHOICES
         context['is_index_page'] = False  
+        
         return context
 
 class UpdateApplicationStatusView(LoginRequiredMixin, UpdateView):

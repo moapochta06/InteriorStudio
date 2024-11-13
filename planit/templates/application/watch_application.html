@@ -8,19 +8,22 @@
         <strong>Количество заявок в статусе "Принято в работу":</strong> {{ in_progress_count }}
     </div>
     {% endif %}
-    <!-- Filter Options -->
     {% if not is_index_page %}
     <div class="mb-3">
         <form method="get" action="{% url 'planit:watch_application' %}">
             <label for="status">Фильтр по статусу:</label>
             <select name="status" id="status" onchange="this.form.submit()">
-                <option value="">Все</option> <!-- Option to show all applications -->
+                <option value="">Все</option>
                 {% for status_value, status_label in statuses %}
                     <option value="{{ status_value }}" {% if request.GET.status == status_value %}selected{% endif %}>
                         {{ status_label }}
                     </option>
                 {% endfor %}
             </select>
+            <label for="search">Поиск:</label>
+            <input type="text" name="search" id="search" value="{{ request.GET.search }}" placeholder="Введите текст для поиска">
+            
+            <button type="submit">Поиск</button>
         </form>
     </div>
     {% endif %}
